@@ -20,7 +20,7 @@ public class StripePaymentController {
     String stripeApiKey;
 
 
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String index() {
         return "index";
     }
