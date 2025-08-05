@@ -27,6 +27,10 @@ public class StripePaymentController {
 		return "home";
 	}
 
+    @RequestMapping("/customer")
+	public String customer() {
+		return "customer";
+	}
 
     @RequestMapping("/index")
     public String index(Model model) throws StripeException {
