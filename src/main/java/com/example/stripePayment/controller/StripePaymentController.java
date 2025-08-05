@@ -22,6 +22,12 @@ public class StripePaymentController {
     @Value("${stripe.apikey}")
     String stripeApiKey;
 
+    @RequestMapping("/home")
+	public String home() {
+		return "home";
+	}
+
+
     @RequestMapping("/index")
     public String index(Model model) throws StripeException {
 
