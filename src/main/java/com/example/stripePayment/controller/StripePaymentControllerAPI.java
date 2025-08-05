@@ -1,6 +1,8 @@
 package com.example.stripePayment.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,7 @@ import com.example.stripePayment.model.CustomerData;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
+import com.stripe.model.CustomerCollection;
 
 @RestController
 @RequestMapping("/api")
@@ -21,7 +24,7 @@ public class StripePaymentControllerAPI {
     String stripeApiKey;
 
     @RequestMapping("/createCustomer")
-    public CustomerData index(@RequestBody CustomerData data) throws StripeException {
+    public CustomerData createCustomer(@RequestBody CustomerData data) throws StripeException {
         Stripe.apiKey = stripeApiKey;
         Map<String, Object> params = new HashMap<>();
         params.put("email", data.getEmail());
@@ -31,5 +34,23 @@ public class StripePaymentControllerAPI {
         return data;
     }
 
-    
+    @RequestMapping("/getAllCustomer")
+    public List<CustomerData> getAllCustomer() throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("limit", 3);
+
+        CustomerCollection customers = Customer.list(params);
+        List<CustomerData> allCustomer = new ArrayList<CustomerData>();
+        for (int i = 0; i < customers.getData().size(); i++) {
+            CustomerData customerData = new CustomerData();
+            customerData.setCustomerId(customers.getData().get(i).getId());
+            customerData.setName(customers.getData().get(i).getName());
+            customerData.setEmail(customers.getData().get(i).getEmail());
+            allCustomer.add(customerData);
+        }
+        return allCustomer;
+    }
+
 }
