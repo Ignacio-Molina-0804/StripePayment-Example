@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.stripe.Stripe;
@@ -72,4 +73,13 @@ public class StripePaymentController {
 		return "success";
 	}
 
+	@RequestMapping("/deleteCustomer/{id}")
+	public String deleteCustomer(@PathVariable("id") String id) throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+
+		Customer customer = Customer.retrieve(id);
+
+		Customer deletedCustomer = customer.delete();
+		return "success";
+	}
 }
