@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,16 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
 import com.example.stripePayment.model.CustomerData;
+import com.example.stripePayment.util.StripeUtil;
 
 @Controller
 public class StripePaymentController {
 
     @Value("${stripe.apikey}")
     String stripeApiKey;
+
+	@Autowired
+	StripeUtil stripeUtil;
 
     @RequestMapping("/home")
 	public String home() {
@@ -81,5 +86,13 @@ public class StripePaymentController {
 
 		Customer deletedCustomer = customer.delete();
 		return "success";
+	}
+
+	@RequestMapping("/getCustomer/{id}")
+	public String getCustomer(@PathVariable("id") String id, Model model) throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+		CustomerData output =stripeUtil.getCustomer(id);
+		model.addAttribute("customerData", output);
+		return "update-customer";
 	}
 }
