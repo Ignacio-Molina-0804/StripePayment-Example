@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
-
+import com.example.stripePayment.util.StripeUtil;
 
 
 @RestController
@@ -25,6 +26,9 @@ public class StripePaymentControllerAPI {
 
     @Value("${stripe.apikey}")
     String stripeApiKey;
+
+    @Autowired
+	StripeUtil stripeUtil;
 
     @RequestMapping("/createCustomer")
     public CustomerData createCustomer(@RequestBody CustomerData data) throws StripeException {
@@ -66,5 +70,11 @@ public class StripePaymentControllerAPI {
 		return "successfully deleted";
 	}
     
+    @RequestMapping("/getCustomer/{id}")
+	public CustomerData getCustomer(@PathVariable("id") String id) throws StripeException {
+		
+		CustomerData output = stripeUtil.getCustomer(id);
+		return output;
+	}
 
 }
