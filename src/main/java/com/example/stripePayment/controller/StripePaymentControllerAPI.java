@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,8 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -52,5 +55,16 @@ public class StripePaymentControllerAPI {
         }
         return allCustomer;
     }
+
+	@RequestMapping("/deleteCustomer/{id}")
+	public String deleteCustomer(@PathVariable("id") String id) throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+
+		Customer customer = Customer.retrieve(id);
+
+		Customer deletedCustomer = customer.delete();
+		return "successfully deleted";
+	}
+    
 
 }
